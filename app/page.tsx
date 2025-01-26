@@ -44,7 +44,7 @@ export default function CertificateSearch() {
         setLoading(false);
       }
     } catch (err) {
-      setError('Error searching for certificate');
+      setError('Error searching for certificate' + err);
       setCertificateData(null);
       setLoading(false);
     }
