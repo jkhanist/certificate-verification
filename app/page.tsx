@@ -1,86 +1,107 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './page.module.css';
 
-// Domain model for company data
-interface CompanyData {
-  Company: string;
-  Website: string;
-  Person: string;
-  Phone: string;
-  Email: string;
+interface CertificateData {
+  'Full Name': string;
+  'Course Name': string;
+  'Hours Completed': string;
+  'Certificate No': string;
+  'Date Of Issue': string;
+  Status: string;
 }
 
-export default function CompanySearch() {
-  const [companies, setCompanies] = useState<CompanyData[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+export default function CertificateSearch() {
+  const [certificateNo, setCertificateNo] = useState('');
+  const [certificateData, setCertificateData] =
+    useState<CertificateData | null>(null);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    async function fetchCompanies() {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          'https://opensheet.elk.sh/1alsvX-fNp0fmvkhINMzMAfUcAl4i752s6TeLYRnnxRg/ATP'
-        );
-        const data: CompanyData[] = await response.json();
-        setCompanies(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch companies', error);
-      }
-    }
-    fetchCompanies();
-  }, []);
+  const handleSearch = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        'https://opensheet.elk.sh/1alsvX-fNp0fmvkhINMzMAfUcAl4i752s6TeLYRnnxRg/Certificates',
+        {
+          cache: 'no-store', // Disable caching
+        }
+      );
+      const data: CertificateData[] = await response.json();
 
-  const filteredCompanies = companies.filter((company) =>
-    Object.values(company).some((value) =>
-      value.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+      const foundCertificate = data.find(
+        (cert) => cert['Certificate No'] === certificateNo
+      );
+
+      if (foundCertificate) {
+        setCertificateData(foundCertificate);
+        setError('');
+        setLoading(false);
+      } else {
+        setCertificateData(null);
+        setError('Certificate not found');
+        setLoading(false);
+      }
+    } catch (err) {
+      setError('Error searching for certificate');
+      setCertificateData(null);
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
-      <div className={styles.card}>
+      <div className={styles.searchContainer}>
         <input
           type='text'
-          placeholder='Search companies...'
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className={styles.searchInput}
+          placeholder='Enter your certificate no.'
+          value={certificateNo}
+          onChange={(e) => setCertificateNo(e.target.value)}
+          className={styles.input}
         />
-        {loading ? (
-          <div>Fetching data...</div>
-        ) : (
-          <table className={styles.table}>
-            {companies.length === 0 ? (
-              <caption></caption>
-            ) : (
-              <thead>
-                <tr>
-                  <th>Company</th>
-                  <th>Website</th>
-                  <th>Person</th>
-                  <th>Phone</th>
-                  <th>Email</th>
-                </tr>
-              </thead>
-            )}
-            <tbody>
-              {filteredCompanies.map((company, index) => (
-                <tr key={index}>
-                  <td>{company.Company}</td>
-                  <td>{company.Website}</td>
-                  <td>{company.Person}</td>
-                  <td>{company.Phone}</td>
-                  <td>{company.Email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <div className={styles.buttonContainer}>
+          <button onClick={handleSearch} className={styles.button}>
+            Search Certificate
+          </button>
+        </div>
       </div>
+
+      {error && <div className={styles.error}>{error}</div>}
+
+      {loading && (
+        <div className={styles.loading}>Searching certificate...</div>
+      )}
+      {!loading && certificateData && (
+        <div
+          className={
+            certificateData.Status === 'Valid'
+              ? styles.resultContainer
+              : styles.invalidResultContainer
+          }
+        >
+          <h2>{certificateData['Status']} Certificate </h2>
+          <div className={styles.detail}>
+            <strong>Full Name:</strong> {certificateData['Full Name']}
+          </div>
+          <div className={styles.detail}>
+            <strong>Course Name:</strong> {certificateData['Course Name']}
+          </div>
+          <div className={styles.detail}>
+            <strong>Hours Completed:</strong>{' '}
+            {certificateData['Hours Completed']}
+          </div>
+          <div className={styles.detail}>
+            <strong>Certificate No:</strong> {certificateData['Certificate No']}
+          </div>
+          <div className={styles.detail}>
+            <strong>Date Of Issue:</strong> {certificateData['Date Of Issue']}
+          </div>
+          <div className={styles.detail}>
+            <strong>Status:</strong> {certificateData['Status']}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
