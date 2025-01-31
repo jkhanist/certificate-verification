@@ -80,7 +80,10 @@ export default function CertificateSearch() {
               : styles.invalidResultContainer
           }
         >
-          <h2>{certificateData['Status']} Certificate </h2>
+          <h2>
+            {certificateData['Status'] === 'Expired' ? 'Expired' : 'Valid'}{' '}
+            Certificate{' '}
+          </h2>
           <div className={styles.detail}>
             <strong>Full Name:</strong> {certificateData['Full Name']}
           </div>
