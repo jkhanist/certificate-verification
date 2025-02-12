@@ -23,7 +23,7 @@ export default function CertificateSearch() {
     try {
       setLoading(true);
       const response = await fetch(
-        'https://opensheet.elk.sh/1alsvX-fNp0fmvkhINMzMAfUcAl4i752s6TeLYRnnxRg/Certificates',
+        'https://opensheet.elk.sh/1alsvX-fNp0fmvkhINMzMAfUcAl4i752s6TeLYRnnxRg/UKQAM',
         {
           cache: 'no-store', // Disable caching
         }
