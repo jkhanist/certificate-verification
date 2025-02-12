@@ -6,7 +6,6 @@ import styles from './page.module.css';
 interface CertificateData {
   'Full Name': string;
   'Course Name': string;
-  'Hours Completed': string;
   'Certificate No': string;
   'Date Of Issue': string;
   Status: string;
@@ -89,10 +88,6 @@ export default function CertificateSearch() {
           </div>
           <div className={styles.detail}>
             <strong>Course Name:</strong> {certificateData['Course Name']}
-          </div>
-          <div className={styles.detail}>
-            <strong>Hours Completed:</strong>{' '}
-            {certificateData['Hours Completed']}
           </div>
           <div className={styles.detail}>
             <strong>Certificate No:</strong> {certificateData['Certificate No']}
