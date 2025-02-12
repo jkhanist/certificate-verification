@@ -1,10 +1,36 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import {
+  Plus_Jakarta_Sans,
+  DM_Sans,
+  Syne,
+  Montserrat,
+  Open_Sans,
+} from 'next/font/google';
 import './globals.css';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: '--font-plus-jakarta-sans',
   subsets: ['latin'],
+  variable: '--font-plus-jakarta-sans',
+});
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
+});
+
+const syne = Syne({
+  subsets: ['latin'],
+  variable: '--font-syne',
+});
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+});
+
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  variable: '--font-open-sans',
 });
 
 export const metadata: Metadata = {
@@ -19,7 +45,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${plusJakartaSans.variable}`}>{children}</body>
+      <body
+        className={`${plusJakartaSans.variable} ${dmSans.variable} ${syne.variable} ${montserrat.variable} ${openSans.variable}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
